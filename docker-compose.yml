@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  master:
+    build: .
+    ports:
+     - "8089:8089"
+     - "5557:5557"
+    command: -f /home/locust/prometheus_exporter.py --master -H http://localhost:8089
+
+  worker:
+    image: locustio/locust
+    volumes:
+      - ./:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host master
+  
+  prometheus:
+    image: prom/prometheus
+    ports:
+     - "9090:9090"
+    volumes:
+     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+     - "3000:3000"
+    
