@@ -7,12 +7,6 @@ class QuickstartUser(HttpUser):
     @task
     def index_page(self):
         self.client.get("/")
+        self.client.get("/fail")
         self.client.get("/export/prometheus")
 
-    @task(3)
-    def view_item(self):
-        item_id = random.randint(1, 10000)
-        self.client.get(f"/item?id={item_id}", name="/item")
-
-    def on_start(self):
-        self.client.post("/login", {"username":"foo", "password":"bar"})
